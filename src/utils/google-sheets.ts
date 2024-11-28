@@ -109,12 +109,46 @@ export async function checkStudentEligibility(
       }
     };
 
+    const parseDateToISO_Full = (timestamp: string): string | null => {
+      try {
+        // Parse custom timestamp format: "2024. 11. 28. 오후 07:29:15"
+        const parts = timestamp.match(
+          /(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(오전|오후)\s*(\d{1,2}):(\d{1,2}):(\d{1,2})/
+        );
+
+        if (!parts) throw new Error("Invalid timestamp format");
+
+        const [total, year, month, day, period, hour, minute, second] = parts;
+        console.log(total);
+        let parsedHour = parseInt(hour, 10);
+
+        // Convert 12-hour to 24-hour format
+        if (period === "오후" && parsedHour < 12) parsedHour += 12;
+        if (period === "오전" && parsedHour === 12) parsedHour += 0;
+
+        // Create a Date object
+        const date = new Date(
+          parseInt(year, 10),
+          parseInt(month, 10) - 1, // Month is 0-based
+          parseInt(day, 10),
+          parsedHour,
+          parseInt(minute, 10),
+          parseInt(second, 10)
+        );
+
+        return date.toISOString();
+      } catch (error) {
+        console.error("Failed to parse timestamp:", timestamp, error);
+        return null; // Return null if parsing fails
+      }
+    };
+
     // Find the most recent usage timestamp for the student
     const recentUsageRow = rowsSheet2
       .filter((row) => row[0] === studentId)
       .sort((a, b) => {
-        const dateA = parseDateToISO(a[2]);
-        const dateB = parseDateToISO(b[2]);
+        const dateA = parseDateToISO_Full(a[2]);
+        const dateB = parseDateToISO_Full(b[2]);
         return dateB && dateA
           ? new Date(dateB).getTime() - new Date(dateA).getTime()
           : 0;
@@ -124,11 +158,20 @@ export async function checkStudentEligibility(
 
     if (recentUsageRow) {
       const recentTimestamp = recentUsageRow[2];
-      const recentDate = parseDateToISO(recentTimestamp);
+      console.log("recentTimestamp", recentTimestamp);
+      const recentDate = parseDateToISO_Full(recentTimestamp);
 
       if (recentDate) {
-        const recentDateTime = new Date(recentDate).getTime();
-        const currentTime = new Date().getTime();
+        const recentDateTime =
+          new Date(recentDate).getTime() + 9 * 60 * 60 * 1000;
+
+        // Get current time in KST (Korea Standard Time)
+        const currentTimeUTC = new Date();
+        const currentTimeKST = new Date(
+          currentTimeUTC.getTime() + 9 * 60 * 60 * 1000
+        ); // 9 hours in milliseconds
+        const currentTime = currentTimeKST.getTime();
+
         const timeDiff = (currentTime - recentDateTime) / (1000 * 60); // Time difference in minutes
 
         // Check if the usage is older than 30 minutes
