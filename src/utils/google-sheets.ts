@@ -120,7 +120,7 @@ export async function checkStudentEligibility(
           : 0;
       })[0]; // Get the most recent entry
 
-    let isUsageValid = false;
+    let isUsageValid = true;
 
     if (recentUsageRow) {
       const recentTimestamp = recentUsageRow[2];
