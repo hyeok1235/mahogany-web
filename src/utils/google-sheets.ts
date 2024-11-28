@@ -162,6 +162,7 @@ export async function checkStudentEligibility(
       const recentDate = parseDateToISO_Full(recentTimestamp);
 
       if (recentDate) {
+        console.log("recentDate", recentDate);
         const recentDateTime =
           new Date(recentDate).getTime() + 9 * 60 * 60 * 1000;
 
@@ -171,6 +172,7 @@ export async function checkStudentEligibility(
           currentTimeUTC.getTime() + 9 * 60 * 60 * 1000
         ); // 9 hours in milliseconds
         const currentTime = currentTimeKST.getTime();
+        console.log(currentTime, recentDateTime);
 
         const timeDiff = (currentTime - recentDateTime) / (1000 * 60); // Time difference in minutes
 
