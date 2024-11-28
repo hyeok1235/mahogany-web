@@ -42,11 +42,13 @@ export default function MenuSelection() {
     const match = option.match(dateRangeRegex);
 
     if (!match) return false;
-    // return true;
 
-    const [startDateStr, endDateStr] = match[0].split("-");
-    const startDate = dayjs(startDateStr, "M.D(ddd)");
-    const endDate = dayjs(endDateStr, "M.D(ddd)");
+    const [startDateStr, endDateStr] = match[0].split("~");
+
+    // 현재 연도를 가져오고, 날짜 포맷에 연도를 추가하여 파싱
+    const currentYear = dayjs().year();
+    const startDate = dayjs(`${currentYear}.${startDateStr}`, "YYYY.M.D(ddd)");
+    const endDate = dayjs(`${currentYear}.${endDateStr}`, "YYYY.M.D(ddd)");
 
     const today = dayjs();
     return (

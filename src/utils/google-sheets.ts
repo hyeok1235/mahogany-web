@@ -83,13 +83,13 @@ export async function checkStudentEligibility(
 
         if (!parts) throw new Error("Invalid timestamp format");
 
-        const [_, year, month, day, period, hour, minute, second] = parts;
+        const [total, year, month, day, period, hour, minute, second] = parts;
+        console.log(total);
         let parsedHour = parseInt(hour, 10);
-        console.log(_);
 
         // Convert 12-hour to 24-hour format
         if (period === "오후" && parsedHour < 12) parsedHour += 12;
-        if (period === "오전" && parsedHour === 12) parsedHour = 0;
+        if (period === "오전" && parsedHour === 12) parsedHour += 0;
 
         // Create a Date object
         const date = new Date(
