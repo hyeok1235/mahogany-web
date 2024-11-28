@@ -1,10 +1,10 @@
 import React from "react";
-import StudentRegistrationForm from "@/components/StudentRegistrationForm";
+import MenuSelection from "@/components/MenuSelection";
 import { Toaster } from "sonner";
-import { Button } from "antd"; // Correct import of Typography
+import { Button } from "antd";
 import Link from "next/link";
 
-export default function Home() {
+export default function MenuPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 flex-col">
       <Link href="/">
@@ -12,7 +12,7 @@ export default function Home() {
           홈으로 가기
         </Button>
       </Link>
-      <StudentRegistrationForm />
+      <MenuSelection />
       <Toaster richColors position="top-center" />
     </div>
   );
