@@ -36,13 +36,13 @@ export default function StudentRegistrationForm() {
         return;
       }
 
-      if (result.studentData.usages === false) {
-        messageApi.open({
-          type: "error",
-          content: `${result.studentData.name}님이 음료수를 마신지 30분이 안지났어요.`,
-        });
-        return;
-      }
+      // if (result.studentData.usages === false) {
+      //   messageApi.open({
+      //     type: "error",
+      //     content: `${result.studentData.name}님이 음료수를 마신지 30분이 안지났어요.`,
+      //   });
+      //   return;
+      // }
 
       if (result.success) {
         localStorage.setItem("studentInfo", JSON.stringify(result.studentData));
