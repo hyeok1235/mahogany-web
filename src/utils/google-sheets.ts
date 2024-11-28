@@ -85,6 +85,7 @@ export async function checkStudentEligibility(
 
         const [_, year, month, day, period, hour, minute, second] = parts;
         let parsedHour = parseInt(hour, 10);
+        console.log(_);
 
         // Convert 12-hour to 24-hour format
         if (period === "오후" && parsedHour < 12) parsedHour += 12;
@@ -92,9 +93,9 @@ export async function checkStudentEligibility(
 
         // Create a Date object
         const date = new Date(
-          year,
+          parseInt(year, 10),
           parseInt(month, 10) - 1, // Month is 0-based
-          day,
+          parseInt(day, 10),
           parsedHour,
           parseInt(minute, 10),
           parseInt(second, 10)

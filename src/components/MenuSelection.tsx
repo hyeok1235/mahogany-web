@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Button, Alert, Result } from "antd";
 import { CoffeeOutlined } from "@ant-design/icons";
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
 
 export default function MenuSelection() {
   const [isLoading, setIsLoading] = useState(false);
@@ -42,17 +42,17 @@ export default function MenuSelection() {
     const match = option.match(dateRangeRegex);
 
     if (!match) return false;
-    return true;
+    // return true;
 
-    // const [startDateStr, endDateStr] = match[0].split("-");
-    // const startDate = dayjs(startDateStr, "M.D(ddd)");
-    // const endDate = dayjs(endDateStr, "M.D(ddd)");
+    const [startDateStr, endDateStr] = match[0].split("-");
+    const startDate = dayjs(startDateStr, "M.D(ddd)");
+    const endDate = dayjs(endDateStr, "M.D(ddd)");
 
-    // const today = dayjs();
-    // return (
-    //   today.isAfter(startDate.startOf("day")) &&
-    //   today.isBefore(endDate.endOf("day"))
-    // );
+    const today = dayjs();
+    return (
+      today.isAfter(startDate.startOf("day")) &&
+      today.isBefore(endDate.endOf("day"))
+    );
   };
 
   const handleBeverageSelection = async (beverage: string) => {
