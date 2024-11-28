@@ -5,6 +5,7 @@ import { OAuth2Client } from "googleapis-common";
 export async function POST(request: NextRequest) {
   try {
     const { studentId, name } = await request.json();
+    console.log(name);
 
     // Google Sheets Authentication
     const auth = new google.auth.GoogleAuth({
