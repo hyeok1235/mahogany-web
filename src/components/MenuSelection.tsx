@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Card, Button, Alert, Result } from "antd";
 import { CoffeeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 export default function MenuSelection() {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,22 +44,35 @@ export default function MenuSelection() {
     const dateRangeRegex = /\d{1,2}\.\d{1,2}\(.\)~\d{1,2}\.\d{1,2}\(.\)/;
     const match = option.match(dateRangeRegex);
 
-    if (!match) return false;
+    if (!match) {
+      console.error("Date range format mismatch:", option);
+      return false;
+    }
 
     const [startDateStr, endDateStr] = match[0].split("~");
 
-    // 포맷을 Safari 호환 방식으로 변경
-    const formatDate = (date: string) => date.replace(/\./g, "/");
+    const formatDate = (date: string) =>
+      date.replace(/\./g, "/").replace(/\(.*\)/, ""); // Removes (ddd)
 
     const currentYear = dayjs().year();
-    const startDate = dayjs(
-      `${currentYear}/${formatDate(startDateStr)}`,
-      "YYYY/M/D(ddd)"
-    );
-    const endDate = dayjs(
-      `${currentYear}/${formatDate(endDateStr)}`,
-      "YYYY/M/D(ddd)"
-    );
+    const formattedStartDate = `${currentYear}/${formatDate(startDateStr)}`;
+    const formattedEndDate = `${currentYear}/${formatDate(endDateStr)}`;
+
+    console.log("Parsed Start Date:", formattedStartDate);
+    console.log("Parsed End Date:", formattedEndDate);
+
+    const startDate = dayjs(formattedStartDate, "YYYY/M/D");
+    const endDate = dayjs(formattedEndDate, "YYYY/M/D");
+
+    if (!startDate.isValid() || !endDate.isValid()) {
+      console.error("Invalid date parsing:", {
+        formattedStartDate,
+        formattedEndDate,
+        startDate,
+        endDate,
+      });
+      return false;
+    }
 
     const today = dayjs();
     return (
