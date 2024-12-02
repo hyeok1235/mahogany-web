@@ -25,6 +25,9 @@ export default function MenuSelection() {
 
       const isWithinRange = validateDateRange(parsedInfo.option);
       setIsValidPeriod(isWithinRange);
+
+      // TODO Range validation
+      setIsValidPeriod(true);
     } else {
       setFeedback({
         visible: true,
