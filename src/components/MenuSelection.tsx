@@ -25,9 +25,6 @@ export default function MenuSelection() {
 
       const isWithinRange = validateDateRange(parsedInfo.option);
       setIsValidPeriod(isWithinRange);
-
-      // TODO Range validation
-      setIsValidPeriod(true);
     } else {
       setFeedback({
         visible: true,
@@ -48,10 +45,18 @@ export default function MenuSelection() {
 
     const [startDateStr, endDateStr] = match[0].split("~");
 
-    // 현재 연도를 가져오고, 날짜 포맷에 연도를 추가하여 파싱
+    // 포맷을 Safari 호환 방식으로 변경
+    const formatDate = (date: string) => date.replace(/\./g, "/");
+
     const currentYear = dayjs().year();
-    const startDate = dayjs(`${currentYear}.${startDateStr}`, "YYYY.M.D(ddd)");
-    const endDate = dayjs(`${currentYear}.${endDateStr}`, "YYYY.M.D(ddd)");
+    const startDate = dayjs(
+      `${currentYear}/${formatDate(startDateStr)}`,
+      "YYYY/M/D(ddd)"
+    );
+    const endDate = dayjs(
+      `${currentYear}/${formatDate(endDateStr)}`,
+      "YYYY/M/D(ddd)"
+    );
 
     const today = dayjs();
     return (
