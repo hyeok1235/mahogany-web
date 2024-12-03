@@ -28,13 +28,13 @@ export default function StudentRegistrationForm() {
       const result = await response.json();
 
       // 사용자가 2잔을 이미 마신 경우
-      // if (result.studentData.drinksToday >= 2) {
-      //   messageApi.open({
-      //     type: "error",
-      //     content: `${result.studentData.name}님은 이미 2잔을 마셨어요.`,
-      //   });
-      //   return;
-      // }
+      if (result.studentData.drinksToday >= 2) {
+        messageApi.open({
+          type: "error",
+          content: `${result.studentData.name}님은 이미 2잔을 마셨어요.`,
+        });
+        return;
+      }
 
       // if (result.studentData.usages === false) {
       //   messageApi.open({

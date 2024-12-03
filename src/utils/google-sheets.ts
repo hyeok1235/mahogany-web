@@ -15,6 +15,8 @@ export async function checkStudentEligibility(
   studentId: string
 ): Promise<(StudentData & { warning?: string; drinksToday?: number }) | null> {
   try {
+    const serverTime = new Date().toISOString();
+    console.log("serverTime", serverTime);
     const auth = new google.auth.GoogleAuth({
       scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
       credentials: {
@@ -71,7 +73,10 @@ export async function checkStudentEligibility(
     });
 
     const rowsSheet2 = response2.data.values || [];
-    const today = new Date().toISOString().split("T")[0]; // Today's date in "YYYY-MM-DD" format
+    const todayUTC = new Date();
+    const todayKST = new Date(todayUTC.getTime() + 9 * 60 * 60 * 1000);
+    console.log("todayKST", todayKST);
+    const today = todayKST.toISOString().split("T")[0]; // Today's date in "YYYY-MM-DD" format
 
     // Helper function to parse date in "YYYY-MM-DD" format
     const parseDateToISO = (timestamp: string): string | null => {
@@ -185,8 +190,11 @@ export async function checkStudentEligibility(
     const drinksToday = rowsSheet2.filter((row) => {
       const studentIdMatch = row[0] === studentId;
       const dateMatch = parseDateToISO(row[2]) === today;
+      console.log("parseDateToISO(row[2])", row[2]);
+      // console.log("today", today);
       return studentIdMatch && dateMatch;
     }).length;
+    console.log("drinksToday", drinksToday);
 
     return { ...studentData, drinksToday, usages: isUsageValid };
   } catch (error) {
